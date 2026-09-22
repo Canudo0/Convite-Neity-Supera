@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Festa de Graduação — Neity Ernesto Supera</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Marcellus&display=swap');
+
+  :root{
+    --paper: #fffdf8;
+    --paper-deep: #f7ecd6;
+    --ink: #3c2a1c;
+    --ink-dim: #8a7563;
+    --brown: #8a5a34;
+    --brown-light: #c79b6e;
+    --brown-deep: #5c3a1e;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ -webkit-text-size-adjust:100%; }
+
+  body{
+    font-family:'Cormorant Garamond', serif;
+    background:
+      radial-gradient(ellipse 600px 500px at 50% 0%, rgba(138,90,52,0.10), transparent 60%),
+      linear-gradient(180deg, #efe4cf 0%, #e6d8bd 100%);
+    color:var(--ink);
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+    padding-top:calc(28px + env(safe-area-inset-top, 0px));
+    padding-bottom:calc(28px + env(safe-area-inset-bottom, 0px));
+    overflow-x:hidden;
+  }
+
+  /* ============ ENVELOPE OVERLAY ============ */
+  .envelope-layer{
+    position:fixed; inset:0; z-index:50;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse 500px 420px at 50% 40%, rgba(138,90,52,0.10), transparent 65%),
+      linear-gradient(180deg,#f3e9d3 0%, #e9dcbf 100%);
+    padding:24px;
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .envelope-layer.layer-hidden{
+    opacity:0;
+    transform:scale(1.04);
+    pointer-events:none;
+  }
+
+  .env-title{
+    font-family:'Marcellus', serif;
+    font-size:14px;
+    letter-spacing:5px;
+    text-transform:uppercase;
+    color:var(--brown-deep);
+    margin-bottom:34px;
+    text-align:center;
+  }
+  .env-title span{
+    display:block;
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:clamp(22px,7vw,28px);
+    letter-spacing:0;
+    color:var(--ink);
+    margin-top:10px;
+  }
+
+  .envelope-scene{ perspective:1400px; width:100%; max-width:320px; }
+  .envelope{
+    position:relative;
+    width:100%;
+    cursor:pointer;
+    filter:drop-shadow(0 20px 35px rgba(92,58,30,0.30));
+  }
+  .envelope svg{ width:100%; height:auto; display:block; }
+
+  #flapGroup{
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+    transition: transform 0.9s cubic-bezier(.6,.1,.25,1);
+    transform-style:preserve-3d;
+  }
+  #flapGroup.flap-open{ transform: rotateX(178deg); }
+
+  .hint{
+    margin-top:30px;
+    font-family:'Marcellus', serif;
+    font-size:12.5px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--brown-deep);
+    opacity:0.85;
+    animation: pulse 2.2s ease-in-out infinite;
+    transition: opacity .5s ease;
+    text-align:center;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:0.5; }
+    50%{ opacity:0.95; }
+  }
+
+  .card{
+    position:relative;
+    width:100%;
+    max-width:460px;
+    background:linear-gradient(180deg, #fffefb 0%, #fbf4e5 55%, #f6ecd6 100%);
+    border-radius:18px;
+    box-shadow:0 20px 60px rgba(92,58,30,0.22), 0 2px 10px rgba(92,58,30,0.10);
+    overflow:hidden;
+  }
+
+  .watermark{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    opacity:0.14;
+    pointer-events:none;
+  }
+
+  .frame{
+    position:absolute;
+    inset:12px;
+    border:1px solid rgba(138,90,52,0.35);
+    border-radius:10px;
+    pointer-events:none;
+  }
+
+  .content{
+    position:relative;
+    z-index:2;
+    padding:38px 26px 32px;
+    text-align:center;
+  }
+
+  .eyebrow{
+    font-family:'Marcellus', serif;
+    font-size:12px;
+    letter-spacing:5px;
+    color:var(--brown-deep);
+    text-transform:uppercase;
+  }
+
+  .cap-emblem{ margin:18px auto 14px; width:56px; height:56px; display:block; }
+
+  .title{
+    font-family:'Marcellus', serif;
+    font-size:clamp(18px,5vw,21px);
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+
+  .title-rule{
+    width:70px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--brown), transparent);
+    margin:16px auto 22px;
+  }
+
+  .lede{
+    font-size:16.5px;
+    line-height:1.65;
+    color:var(--ink-dim);
+  }
+  .lede .names{ color:var(--brown-deep); font-style:italic; font-weight:600; }
+
+  .name-block{ margin:32px 0 4px; }
+  .name-caption{
+    font-family:'Marcellus', serif;
+    font-size:11.5px;
+    letter-spacing:3.5px;
+    color:var(--brown-deep);
+    text-transform:uppercase;
+    margin-bottom:12px;
+  }
+  .grad-name{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-style:italic;
+    font-size:clamp(30px,9vw,40px);
+    line-height:1.15;
+    background:linear-gradient(180deg, var(--brown-light) 0%, var(--brown) 50%, var(--brown-deep) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .degree-line{
+    margin-top:12px;
+    font-family:'Marcellus', serif;
+    font-size:12px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+  }
+
+  .divider{ display:flex; align-items:center; justify-content:center; gap:10px; margin:28px 0; }
+  .divider .line{ width:44px; height:1px; background:rgba(138,90,52,0.5); }
+  .divider .diamond{ width:6px; height:6px; background:var(--brown); transform:rotate(45deg); }
+
+  .details{
+    background:rgba(138,90,52,0.06);
+    border:1px solid rgba(138,90,52,0.18);
+    border-radius:12px;
+    padding:22px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .detail-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:left;
+  }
+  .detail-icon{
+    flex-shrink:0;
+    width:34px; height:34px;
+    border-radius:50%;
+    background:linear-gradient(180deg, var(--brown-light), var(--brown));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .detail-icon svg{ width:16px; height:16px; stroke:#fffdf6; fill:none; }
+  .detail-text .label{
+    font-family:'Marcellus', serif;
+    font-size:10.5px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--brown-deep);
+    margin-bottom:2px;
+  }
+  .detail-text .value{
+    font-size:17.5px;
+    color:var(--ink);
+    font-weight:600;
+  }
+
+  .closing{
+    margin-top:26px;
+    font-size:15.5px;
+    line-height:1.65;
+    color:var(--ink-dim);
+    font-style:italic;
+  }
+
+  .rsvp-section{ margin-top:32px; }
+  .rsvp-label{
+    font-family:'Marcellus', serif;
+    font-size:12.5px;
+    letter-spacing:3.5px;
+    text-transform:uppercase;
+    color:var(--brown-deep);
+    margin-bottom:6px;
+  }
+  .rsvp-sub{ font-size:14.5px; color:var(--ink-dim); margin-bottom:20px; }
+
+  .rsvp-name-wrap{ margin-bottom:14px; }
+  .rsvp-name-label{
+    display:block;
+    font-family:'Marcellus', serif;
+    font-size:10.5px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+    text-align:left;
+  }
+  .rsvp-name-input{
+    width:100%;
+    padding:14px 16px;
+    font-family:'Cormorant Garamond', serif;
+    font-size:17px;
+    font-style:italic;
+    color:var(--ink);
+    background:rgba(255,255,255,0.6);
+    border:1px solid rgba(138,90,52,0.4);
+    border-radius:10px;
+    outline:none;
+  }
+  .rsvp-name-input::placeholder{ color:rgba(122,101,79,0.55); font-style:italic; }
+  .rsvp-name-input:focus{ border-color:var(--brown); background:#fff; }
+
+  .rsvp-hint-msg{
+    text-align:left;
+    font-size:13.5px;
+    font-style:italic;
+    color:#a3402f;
+    margin:-6px 0 14px;
+    opacity:0;
+    transition:opacity .25s ease;
+  }
+  .rsvp-hint-msg.show{ opacity:1; }
+
+  .rsvp-buttons{ display:flex; flex-direction:column; gap:14px; }
+
+  .rsvp-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:16px 20px;
+    font-family:'Marcellus', serif;
+    font-size:14.5px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    text-decoration:none;
+    border-radius:10px;
+    transition: transform .15s ease;
+  }
+  .rsvp-btn:active{ transform:scale(0.97); }
+  .rsvp-btn svg{ width:18px; height:18px; flex-shrink:0; }
+
+  .rsvp-btn.confirm{
+    color:#2b2010;
+    background:linear-gradient(180deg, var(--brown-light) 0%, var(--brown) 55%, var(--brown-deep) 100%);
+    box-shadow:0 10px 22px rgba(138,90,52,0.30);
+  }
+  .rsvp-btn.decline{
+    color:var(--ink-dim);
+    background:transparent;
+    border:1px solid rgba(122,112,97,0.4);
+  }
+  .rsvp-btn.decline svg path{ stroke:var(--ink-dim); }
+
+  .footer-note{
+    margin-top:22px;
+    font-size:12.5px;
+    letter-spacing:0.5px;
+    color:rgba(58,42,28,0.5);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== ENVELOPE (closed cover, tap to open) ===== -->
+<div class="envelope-layer" id="envelopeLayer">
+  <div class="env-title">Você foi convidado(a) para<span>a Festa de Graduação</span></div>
+
+  <div class="envelope-scene">
+    <div class="envelope" id="envelope">
+      <svg viewBox="0 0 640 430" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fffef9"/>
+            <stop offset="1" stop-color="#f2e6c9"/>
+          </linearGradient>
+          <linearGradient id="flapGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fffdf6"/>
+            <stop offset="1" stop-color="#e3c9a0"/>
+          </linearGradient>
+          <linearGradient id="sealGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#c79b6e"/>
+            <stop offset="0.55" stop-color="#8a5a34"/>
+            <stop offset="1" stop-color="#5c3a1e"/>
+          </linearGradient>
+        </defs>
+
+        <rect x="4" y="30" width="632" height="396" rx="4" fill="url(#bodyGrad)" stroke="#8a5a34" stroke-width="1.5"/>
+
+        <path d="M4 30 L320 235 L636 30" fill="none" stroke="#b58a5e" stroke-width="1.2" opacity="0.8"/>
+        <path d="M4 426 L250 260" fill="none" stroke="#b58a5e" stroke-width="1" opacity="0.55"/>
+        <path d="M636 426 L390 260" fill="none" stroke="#b58a5e" stroke-width="1" opacity="0.55"/>
+
+        <path d="M4 426 L320 235 L636 426 Z" fill="#8a5a34" opacity="0.05"/>
+
+        <g id="flapGroup">
+          <path d="M4 30 L636 30 L320 240 Z" fill="url(#flapGrad)" stroke="#8a5a34" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M60 46 L580 46" stroke="#cba178" stroke-width="1" opacity="0.5"/>
+        </g>
+
+        <g>
+          <circle cx="320" cy="150" r="30" fill="url(#sealGrad)" stroke="#5c3a1e" stroke-width="1"/>
+          <circle cx="320" cy="150" r="30" fill="none" stroke="#fffdf6" stroke-width="1" opacity="0.35"/>
+          <g transform="translate(320,150)">
+            <path d="M-18 -6L0 -14L18 -6L0 2L-18 -6Z" fill="none" stroke="#fffdf6" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M-10 -1V8C-10 8 -5 13 0 13C5 13 10 8 10 8V-1" fill="none" stroke="#fffdf6" stroke-width="1.3"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="hint" id="hint">Toque no envelope para abrir</div>
+</div>
+
+<div class="card">
+  <svg class="watermark" viewBox="0 0 460 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="wm" width="150" height="150" patternUnits="userSpaceOnUse" patternTransform="rotate(10)">
+        <g stroke="#8a5a34" stroke-width="1.1" fill="none">
+          <path d="M28 22L54 33L28 44L2 33L28 22Z"/>
+          <path d="M13 37V47C13 47 19 53 28 53C37 53 43 47 43 47V37"/>
+          <path d="M54 33V43" stroke-linecap="round"/>
+        </g>
+        <g stroke="#8a5a34" stroke-width="1.1" fill="none" transform="translate(80,80)">
+          <rect x="0" y="4" width="34" height="8" rx="4"/>
+          <ellipse cx="0" cy="8" rx="2.6" ry="4.6"/>
+          <ellipse cx="34" cy="8" rx="2.6" ry="4.6"/>
+          <path d="M11 4L11 17M23 4L23 -4" stroke-dasharray="1.5 2"/>
+        </g>
+      </pattern>
+    </defs>
+    <rect width="460" height="900" fill="url(#wm)"/>
+  </svg>
+
+  <div class="frame"></div>
+
+  <div class="content">
+    <div class="eyebrow">Festa de Graduação</div>
+
+    <svg class="cap-emblem" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 20L92 38L50 56L8 38L50 20Z" stroke="#8a5a34" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M28 45V64C28 64 36 74 50 74C64 74 72 64 72 64V45" stroke="#8a5a34" stroke-width="1.6"/>
+      <path d="M92 38V56" stroke="#8a5a34" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="92" cy="60" r="2.6" fill="#8a5a34"/>
+    </svg>
+
+    <div class="title">Uma Noite Para Celebrar</div>
+    <div class="title-rule"></div>
+
+    <p class="lede">
+      Depois da beca e do capelo, chega o momento de celebrar em grande.
+      Com o coração transbordando de orgulho e gratidão,
+      <span class="names">Ernesto Supera</span> e <span class="names">Atija Supera</span>
+      têm o prazer de convidá-lo(a) para uma noite de alegria, brindes e boas memórias,
+      em honra da conquista da sua querida filha.
+    </p>
+
+    <div class="name-block">
+      <div class="name-caption">A Graduada</div>
+      <div class="grad-name">Neity Ernesto<br>Supera</div>
+      <div class="degree-line">Licenciatura</div>
+    </div>
+
+    <div class="divider">
+      <div class="line"></div>
+      <div class="diamond"></div>
+      <div class="line"></div>
+    </div>
+
+    <div class="details">
+      <div class="detail-row">
+        <div class="detail-icon">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+        </div>
+        <div class="detail-text">
+          <div class="label">Data</div>
+          <div class="value">04 de Outubro</div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <div class="detail-text">
+          <div class="label">Hora</div>
+          <div class="value">17h00</div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="detail-text">
+          <div class="label">Local</div>
+          <div class="value">Monte Real, Montepuez</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="closing">
+      Que esta noite seja repleta de brindes, sorrisos e celebração —
+      a sua presença tornará tudo ainda mais especial.
+    </p>
+
+    <div class="rsvp-section">
+      <div class="rsvp-label">Confirmação de Presença</div>
+      <div class="rsvp-sub">Escreva o seu nome e diga-nos se vai marcar presença</div>
+
+      <div class="rsvp-name-wrap">
+        <label class="rsvp-name-label" for="guestName">O seu nome</label>
+        <input class="rsvp-name-input" type="text" id="guestName" placeholder="Escreva aqui o seu nome completo" autocomplete="name">
+      </div>
+      <div class="rsvp-hint-msg" id="nameHint">Por favor, escreva o seu nome antes de continuar.</div>
+
+      <div class="rsvp-buttons">
+        <a class="rsvp-btn confirm" id="btnConfirm" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="#2b2010"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.72.45 3.4 1.31 4.88L2 22l5.35-1.4a9.87 9.87 0 0 0 4.69 1.19h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.24 0 4.35.87 5.94 2.46a8.3 8.3 0 0 1 2.45 5.9c0 4.6-3.75 8.34-8.36 8.34a8.4 8.4 0 0 1-4.25-1.16l-.3-.18-3.15.83.84-3.07-.2-.32a8.28 8.28 0 0 1-1.28-4.44c0-4.6 3.75-8.36 8.31-8.36m-4.6 4.8c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05 0 1.21.88 2.38 1 2.54.13.17 1.72 2.72 4.24 3.71 2.1.83 2.53.67 2.98.62.45-.04 1.46-.6 1.66-1.18.21-.58.21-1.07.15-1.18-.07-.1-.24-.17-.5-.3-.26-.13-1.53-.75-1.77-.84-.24-.09-.41-.13-.58.13-.17.26-.67.84-.82 1.01-.15.17-.3.19-.56.06-.26-.13-1.08-.4-2.06-1.27-.76-.68-1.28-1.51-1.43-1.77-.15-.26-.02-.4.11-.53.11-.11.26-.3.38-.44.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.06-.13-.58-1.42-.8-1.94-.21-.5-.42-.44-.58-.44Z"/></svg>
+          Vou Comparecer
+        </a>
+        <a class="rsvp-btn decline" id="btnDecline" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+          Não Poderei Ir
+        </a>
+      </div>
+
+      <div class="footer-note">WhatsApp &nbsp;·&nbsp; +258 86 989 0445</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const whatsappNumber = '258869890445';
+  const nameInput = document.getElementById('guestName');
+  const nameHint = document.getElementById('nameHint');
+  const btnConfirm = document.getElementById('btnConfirm');
+  const btnDecline = document.getElementById('btnDecline');
+
+  function buildMessage(status){
+    const name = nameInput.value.trim();
+    if(status === 'confirm'){
+      return 'Olá! 🎉 Aqui é ' + name + '. Confirmo com muito prazer a minha presença na Festa de Graduação de Neity Ernesto Supera, no dia 04 de Outubro, às 17h00, em Monte Real, Montepuez. Até lá!';
+    }
+    return 'Olá. Aqui é ' + name + '. Agradeço o convite para a Festa de Graduação de Neity Ernesto Supera, no dia 04 de Outubro. Infelizmente não poderei estar presente, mas desejo muitas felicidades à Neity! 💛';
+  }
+
+  function handleRsvpClick(e, status){
+    const name = nameInput.value.trim();
+    if(!name){
+      e.preventDefault();
+      nameHint.classList.add('show');
+      nameInput.focus();
+      return;
+    }
+    nameHint.classList.remove('show');
+    const msg = buildMessage(status);
+    e.currentTarget.href = 'https://wa.me/' + whatsappNumber + '?text=' + encodeURIComponent(msg);
+  }
+
+  btnConfirm.addEventListener('click', function(e){ handleRsvpClick(e, 'confirm'); });
+  btnDecline.addEventListener('click', function(e){ handleRsvpClick(e, 'decline'); });
+  nameInput.addEventListener('input', function(){ nameHint.classList.remove('show'); });
+
+  // ===== Envelope open interaction =====
+  let opened = false;
+  const envelope = document.getElementById('envelope');
+  const flap = document.getElementById('flapGroup');
+  const layer = document.getElementById('envelopeLayer');
+  const hint = document.getElementById('hint');
+
+  function openEnvelope(){
+    if(opened) return;
+    opened = true;
+    hint.style.opacity = '0';
+    flap.classList.add('flap-open');
+    setTimeout(function(){
+      layer.classList.add('layer-hidden');
+    }, 550);
+  }
+
+  envelope.addEventListener('click', openEnvelope);
+  envelope.addEventListener('keypress', function(e){
+    if(e.key === 'Enter' || e.key === ' ') openEnvelope();
+  });
+</script>
+
+</body>
+</html>
